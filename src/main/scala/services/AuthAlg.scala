@@ -1,7 +1,5 @@
 package services
 
-import cats.Functor
-import dev.profunktor.redis4cats.RedisCommands
 import domain.auth.{JwtToken, Password, UserName}
 import pdi.jwt.JwtClaim
 

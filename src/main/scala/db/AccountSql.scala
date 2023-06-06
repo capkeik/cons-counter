@@ -22,6 +22,8 @@ trait AccountSql {
 }
 
 object AccountSql {
+
+  def make: AccountSql = new Impl
   private final class Impl() extends AccountSql {
     import queries._
     override def listAll(userId: UserId): ConnectionIO[List[Account]] =

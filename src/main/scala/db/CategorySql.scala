@@ -20,6 +20,9 @@ trait CategorySql {
 }
 Category
 object CategorySql {
+
+  def make: CategorySql = new Impl
+
   object queries {
     def listAllSql(userId: UserId): Query0[Category] =
       sql"""

@@ -70,7 +70,7 @@ object transaction {
     accountId: AccountId,
     amount: AmountParam
   ) {
-    def toDomain(): CreateTransaction =
+    def toDomain: CreateTransaction =
       CreateTransaction(
         name.toDomain,
         transactionType.toDomain,

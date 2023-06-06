@@ -60,7 +60,7 @@ object account {
     id: AccountIdParam,
     amount: AmountParam
   ) {
-    def toDomain(): UpdateAccount =
+    def toDomain: UpdateAccount =
       UpdateAccount(
         AccountId(UUID.fromString(id.value)),
         Amount(BigDecimal(amount.value))

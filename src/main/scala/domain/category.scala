@@ -44,7 +44,7 @@ object category {
     name: CategoryNameParam,
     catType: CategoryTypeParam
   ) {
-    def toDomain(): CreateCategory = {
+    def toDomain: CreateCategory = {
       CreateCategory(
         name.toDomain,
         catType.toDomain

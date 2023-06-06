@@ -8,8 +8,9 @@ import domain.transaction.TransactionId
 import scala.util.control.NoStackTrace
 
 object errors {
-  sealed abstract class AppError(
+  sealed class AppError(
     val message: String,
+    val th: Throwable = new Throwable()
   ) extends Throwable
 
   case class UserNotFound(username: UserName)
@@ -36,9 +37,9 @@ object errors {
   case class AccountNotFound(id: AccountId)
     extends AppError(message = s"Account \"$id\" not found")
 
-  case class InternalError(messageIn: String)
+  case class InternalError(messageIn: String = "", cause: Throwable = new Throwable())
     extends AppError(message = s"$messageIn (((")
 
-  case class TransactionNotFound(id: TransactionId)
+  case class TransactionNotFound(id: TransactionId, cause: Throwable = new Throwable())
     extends AppError(message = s"Transaction \"$id\" not found")
 }

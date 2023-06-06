@@ -18,7 +18,7 @@ trait CategorySql {
   def createCat(userId: UserId, createCategory: CreateCategory): ConnectionIO[Unit]
   def removeCat(userId: UserId, categoryId: CategoryId): ConnectionIO[Either[CategoryNotFound, Unit]]
 }
-Category
+
 object CategorySql {
 
   def make: CategorySql = new Impl

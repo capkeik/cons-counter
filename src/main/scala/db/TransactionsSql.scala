@@ -1,21 +1,26 @@
 package db
 
 import cats.implicits.{catsSyntaxApplicativeId, catsSyntaxEitherId}
-import domain.{Income, Outcome, TransactionDirection}
 import domain.auth.UserId
-import domain.errors.{AppError, TransactionNotFound}
+import domain.errors.TransactionNotFound
 import domain.transaction.{CreateTransaction, Transaction, TransactionId}
+import domain.{Income, Outcome, TransactionDirection}
 import doobie.ConnectionIO
 import doobie.implicits.toSqlInterpolator
 import doobie.util.query.Query0
 import doobie.util.update.Update0
 
 trait TransactionsSql {
-  def findAll(userId: UserId): ConnectionIO[List[Transaction]]
-  def findIncomes(userId: UserId): ConnectionIO[List[Transaction]]
-  def findOutcomes(userId: UserId): ConnectionIO[List[Transaction]]
+  def listAll(userId: UserId): ConnectionIO[List[Transaction]]
+
+  def listIncomes(userId: UserId): ConnectionIO[List[Transaction]]
+
+  def listOutcomes(userId: UserId): ConnectionIO[List[Transaction]]
+
   def create(userId: UserId, createTransaction: CreateTransaction): ConnectionIO[Unit]
+
   def remove(userId: UserId, transactionId: TransactionId): ConnectionIO[Either[TransactionNotFound, Unit]]
+
   def findById(userId: UserId, transactionId: TransactionId): ConnectionIO[Option[Transaction]]
 }
 
@@ -24,14 +29,16 @@ object TransactionsSql {
   def make = new Impl
 
   private final class Impl extends TransactionsSql {
+
     import queries._
-    override def findAll(userId: UserId): ConnectionIO[List[Transaction]] =
+
+    override def listAll(userId: UserId): ConnectionIO[List[Transaction]] =
       findAllSql(userId).to[List]
 
-    override def findIncomes(userId: UserId): ConnectionIO[List[Transaction]] =
+    override def listIncomes(userId: UserId): ConnectionIO[List[Transaction]] =
       findByType(userId, Income).to[List]
 
-    override def findOutcomes(userId: UserId): ConnectionIO[List[Transaction]] =
+    override def listOutcomes(userId: UserId): ConnectionIO[List[Transaction]] =
       findByType(userId, Outcome).to[List]
 
     override def create(userId: UserId, createTransaction: CreateTransaction): ConnectionIO[Unit] =
@@ -48,6 +55,7 @@ object TransactionsSql {
     override def findById(userId: UserId, transactionId: TransactionId): ConnectionIO[Option[Transaction]] =
       findByIdSql(userId, transactionId).option
   }
+
   private object queries {
     def findAllSql(userId: UserId): Query0[Transaction] =
       sql"""

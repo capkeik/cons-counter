@@ -58,5 +58,5 @@ object category {
   )
 
   @derive(decoder, encoder, eqv, show)
-  case class Category(id: CategoryId, name: CategoryName)
+  case class Category(id: CategoryId, name: CategoryName, categoryType: CategoryType)
 }

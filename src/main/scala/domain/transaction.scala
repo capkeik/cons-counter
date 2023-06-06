@@ -17,7 +17,7 @@ import java.util.UUID
 
 object transaction {
   @derive(loggable, decoder, encoder)
-  @newtype case class TransactionId(value: UUID)
+  @newtype case class TransactionId(value: Long)
 
   @newtype case class TransactionTS(value: Long)
 

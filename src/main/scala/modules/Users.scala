@@ -1,4 +1,4 @@
-package services
+package modules
 
 import domain.auth.{EncryptedPassword, User, UserId, UserName}
 

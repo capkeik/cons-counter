@@ -1,11 +1,11 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "2.13.11-M2"
+ThisBuild / scalaVersion := "2.13.10"
 
 lazy val root = (project in file("."))
   .settings(
     name := "cost-accounting",
-    scalacOptions ++= List("-Ymacro-annotations", "-Yrangepos", "-Wconf:cat=unused:info", "-Ypartial-unification"),
+    scalacOptions ++= List("-Ymacro-annotations"),
     libraryDependencies ++= Seq(
       "io.estatico" %% "newtype" % "0.4.4",
       "io.circe" %% "circe-core" % "0.15.0-M1",

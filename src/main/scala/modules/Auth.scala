@@ -1,4 +1,4 @@
-package services
+package modules
 
 import domain.auth.{JwtToken, Password, UserName}
 import pdi.jwt.JwtClaim

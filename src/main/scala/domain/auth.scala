@@ -14,7 +14,7 @@ import scala.util.control.NoStackTrace
 object auth {
 
   @derive(loggable, encoder, decoder)
-  @newtype case class UserId(value: UUID)
+  @newtype case class UserId(value: Long)
 
   @derive(loggable, encoder, decoder)
   @newtype case class UserName(value: String)
@@ -41,6 +41,8 @@ object auth {
   @derive(encoder, decoder, show)
   case class User(uuid: UserId, name: UserName)
 
+  case class UserWithPassword(uuid: UserId, name: UserName, password: Password)
+
   @derive(decoder, encoder)
   @newtype
   case class PasswordParam(value: NonEmptyString) {
@@ -48,9 +50,19 @@ object auth {
   }
 
   @derive(decoder, encoder)
-  case class CreateUser(
+  case class CreateUserParam(
     userName: UserNameParam,
     password: PasswordParam
+  ) {
+    def toDomain: CreateUser = CreateUser(
+      userName.toDomain,
+      password.toDomain
+    )
+  }
+
+  case class CreateUser(
+    name: UserName,
+    password: Password
   )
 
   case class UserNotFound(username: UserName) extends NoStackTrace

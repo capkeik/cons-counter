@@ -67,6 +67,6 @@ object account {
   @derive(decoder, encoder)
   case class UpdateAccount(
     id: AccountId,
-    price: Amount
+    amount: Amount
   )
 }

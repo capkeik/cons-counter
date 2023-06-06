@@ -1,8 +1,9 @@
 package domain
 
 import domain.account.{AccountId, AccountName}
-import domain.auth.UserName
+import domain.auth.{UserId, UserName}
 import domain.category.{CategoryId, CategoryName}
+import domain.transaction.TransactionId
 
 import scala.util.control.NoStackTrace
 
@@ -12,15 +13,16 @@ object errors {
   ) extends Throwable
 
   case class UserNotFound(username: UserName)
-    extends AppError(message = s"Username $username not found")
+    extends AppError(message = s"Username ${username.value} not found")
+
+  case class UserIdNotFound(id: UserId)
+    extends AppError(message = s"User ${id.value} not found")
 
   case class UserNameInUse(username: UserName)
-    extends AppError(message = s"Username $username already in use")
+    extends AppError(message = s"Username ${username.value} already in use")
 
   case class InvalidPassword()
     extends AppError(message = s"Invalid password")
-
-  case object TokenNotFound extends AppError(message = s"Token not found")
 
   case class CategoryNameInUse(name: CategoryName)
     extends AppError(message = s"Category name $name already in use")
@@ -36,4 +38,7 @@ object errors {
 
   case class InternalError(messageIn: String)
     extends AppError(message = s"$messageIn (((")
+
+  case class TransactionNotFound(id: TransactionId)
+    extends AppError(message = s"Transaction \"$id\" not found")
 }

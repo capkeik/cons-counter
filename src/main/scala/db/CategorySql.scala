@@ -15,7 +15,7 @@ trait CategorySql {
   def listAll(userId: UserId): ConnectionIO[List[Category]]
   def listOutcomes(userId: UserId, catType: TransactionType): ConnectionIO[List[Category]]
   def listIncomes(userId: UserId, catType: TransactionType): ConnectionIO[List[Category]]
-  def createCat(userId: UserId, createCategory: CreateCategory): ConnectionIO[Category]
+  def createCat(userId: UserId, createCategory: CreateCategory): ConnectionIO[Unit]
   def removeCat(userId: UserId, categoryId: CategoryId): ConnectionIO[Either[CategoryNotFound, Unit]]
 }
 Category
@@ -48,13 +48,13 @@ object CategorySql {
     def findByIdSql(userId: UserId, categoryId: CategoryId): Query0[Option[Category]] =
       sql"""
            select * from account
-           where user_id = ${userId} and id = ${categoryId}
+           where user_id = ${userId.value} and id = ${categoryId.value}
          """.query[Option[Category]]
 
     def findByNameSql(userId: UserId, categoryName: CategoryName): Query0[Option[Category]] =
       sql"""
            select * from account
-           where user_id = ${userId} and name = ${categoryName}
+           where user_id = ${userId.value} and name = ${categoryName.value}
          """.query[Option[Category]]
 
   }
@@ -75,11 +75,8 @@ object CategorySql {
     override def createCat(
       userId: UserId,
       createCategory: CreateCategory
-    ): doobie.ConnectionIO[Category] =
-      createCatSql(userId, createCategory).withUniqueGeneratedKeys[CategoryId]("id")
-        .map(id =>
-          Category(id, createCategory.name, createCategory.categoryType)
-        )
+    ): doobie.ConnectionIO[Unit] =
+      createCatSql(userId, createCategory).run.map(id => ())
 
     override def removeCat(userId: UserId, categoryId: CategoryId): ConnectionIO[Either[CategoryNotFound, Unit]] =
       removeCatSql(userId, categoryId).run.map {

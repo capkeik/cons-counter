@@ -24,7 +24,7 @@ trait AccountSql {
 object AccountSql {
 
   def make: AccountSql = new Impl
-  private final class Impl() extends AccountSql {
+  private final class Impl extends AccountSql {
     import queries._
     override def listAll(userId: UserId): ConnectionIO[List[Account]] =
       listAllSql(userId).to[List]
@@ -84,7 +84,7 @@ object AccountSql {
         }
       }
   }
-  object queries {
+  private object queries {
     def listAllSql(userId: UserId): Query0[Account] =
       sql"""
            select * from account
@@ -94,29 +94,29 @@ object AccountSql {
     def findByNameSql(userId: UserId, accountName: AccountName): Query0[Account] =
       sql"""
            select * from account
-           where user_id = ${userId} and name = ${accountName}
+           where user_id = ${userId.value} and name = ${accountName.value}
          """.query[Account]
 
     def findByIdSql(userId: UserId, accountId: AccountId): Query0[Account] =
       sql"""
            select * from account
-           where user_id = ${userId} and id = ${accountId}
+           where user_id = ${userId.value} and id = ${accountId.value}
          """.query[Account]
 
     def createSql(userId: UserId, createAccount: CreateAccount): Update0 =
       sql"""
            insert into account (user_id, name, amount)
-           values (${userId}, ${createAccount.name.value}, ${createAccount.amount.value})
+           values (${userId.value}, ${createAccount.name.value}, ${createAccount.amount.value})
          """.update
 
     def removeSql(userId: UserId, accountId: AccountId): Update0 =
       sql"""
-           delete from account where user_id = ${userId} and id = ${accountId}
+           delete from account where user_id = ${userId.value} and id = ${accountId.value}
          """.update
     def updateSql(userId: UserId, updateAccount: UpdateAccount): Update0 =
       sql"""
-           update account set (amount) = ${updateAccount.amount}
-           where account.id = ${updateAccount.id} and user_id = ${userId}
+           update account set (amount) = ${updateAccount.amount.value}
+           where account.id = ${updateAccount.id.value} and user_id = ${userId.value}
          """.update
   }
 }

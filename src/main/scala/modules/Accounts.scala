@@ -1,4 +1,4 @@
-package services
+package modules
 
 import domain.Amount
 import domain.account.{Account, AccountId, AccountName, CreateAccount, UpdateAccount}

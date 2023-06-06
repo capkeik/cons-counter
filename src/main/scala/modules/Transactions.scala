@@ -1,4 +1,4 @@
-package services
+package modules
 
 import domain.auth.UserId
 import domain.transaction.{CreateTransaction, Transaction, TransactionId}

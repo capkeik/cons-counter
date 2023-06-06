@@ -1,11 +1,10 @@
 package db
 
 import cats.syntax.either._
-import cats.syntax.applicative._
 import domain.{Income, Outcome, TransactionDirection}
 import domain.auth.UserId
 import domain.category.{Category, CategoryId, CategoryName, CreateCategory}
-import domain.errors.{CategoryNameInUse, CategoryNotFound}
+import domain.errors.CategoryNotFound
 import domain.transaction.TransactionType
 import doobie.ConnectionIO
 import doobie.implicits.toSqlInterpolator
@@ -42,6 +41,19 @@ object CategorySql {
       sql"""
             delete from category where id = ${categoryId.value}
          """.update
+
+    def findByIdSql(userId: UserId, categoryId: CategoryId): Query0[Option[Category]] =
+      sql"""
+           select * from account
+           where user_id = ${userId} and id = ${categoryId}
+         """.query[Option[Category]]
+
+    def findByNameSql(userId: UserId, categoryName: CategoryName): Query0[Option[Category]] =
+      sql"""
+           select * from account
+           where user_id = ${userId} and name = ${categoryName}
+         """.query[Option[Category]]
+
   }
 
   private final class Impl extends CategorySql {

@@ -12,11 +12,14 @@ import eu.timepit.refined.types.string.NonEmptyString
 import io.estatico.newtype.macros.newtype
 import tofu.logging.derivation.{loggable, show}
 
+import java.sql.Timestamp
 import java.util.UUID
 
 object transaction {
   @derive(loggable, decoder, encoder)
-  @newtype case class TransactionId(value: UUID)
+  @newtype case class TransactionId(value: Long)
+
+  @newtype case class TransactionTS(value: Long)
 
   @derive(decoder, encoder, eqv, show)
   @newtype case class TransactionName(value: String)
@@ -34,7 +37,8 @@ object transaction {
     transactionDescription: TransactionDescription,
     category: Category,
     account: Account,
-    amount: Amount
+    amount: Amount,
+    timestamp: TransactionTS
   )
   @newtype
   case class TransactionNameParam(value: NonEmptyString) {

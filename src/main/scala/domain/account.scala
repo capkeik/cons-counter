@@ -4,17 +4,15 @@ import derevo.cats.eqv
 import derevo.circe.{decoder, encoder}
 import derevo.derive
 import eu.timepit.refined.api.Refined
-import eu.timepit.refined.auto.autoUnwrap
-import eu.timepit.refined.string.{Uuid, ValidBigDecimal}
+import eu.timepit.refined.auto._
+import eu.timepit.refined.string.{ValidBigDecimal, ValidLong}
 import eu.timepit.refined.types.string.NonEmptyString
 import io.estatico.newtype.macros.newtype
 import tofu.logging.derivation.{loggable, show}
 
-import java.util.UUID
-
 object account {
   @derive(loggable, decoder, encoder)
-  @newtype case class AccountId(value: UUID)
+  @newtype case class AccountId(value: Long)
 
   @derive(decoder, encoder, eqv, show)
   @newtype case class AccountName(value: String)
@@ -53,8 +51,7 @@ object account {
 
   @derive(decoder, encoder)
   @newtype
-  case class AccountIdParam(value: String Refined Uuid)
-
+  case class AccountIdParam(value: Long)
   @derive(decoder, encoder)
   case class UpdateAccountParam(
     id: AccountIdParam,
@@ -62,7 +59,7 @@ object account {
   ) {
     def toDomain: UpdateAccount =
       UpdateAccount(
-        AccountId(UUID.fromString(id.value)),
+        AccountId(id.value),
         Amount(BigDecimal(amount.value))
       )
   }

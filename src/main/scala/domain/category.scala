@@ -13,7 +13,7 @@ import java.util.UUID
 
 object category {
   @derive(decoder, encoder, eqv, show, uuid)
-  @newtype case class CategoryId(value: UUID)
+  @newtype case class CategoryId(value: Long)
 
   @derive(decoder, encoder, eqv, show)
   @newtype case class CategoryName(value: String)
@@ -58,5 +58,5 @@ object category {
   )
 
   @derive(decoder, encoder, eqv, show)
-  case class Category(id: CategoryId, name: CategoryName)
+  case class Category(id: CategoryId, name: CategoryName, categoryType: CategoryType)
 }

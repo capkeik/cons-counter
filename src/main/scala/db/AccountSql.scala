@@ -33,7 +33,7 @@ object AccountSql {
       findByNameSql(userId, createAccount.name).option.flatMap {
         case None =>
           createSql(userId, createAccount)
-            .withUniqueGeneratedKeys[AccountId]("id")
+            .run
             .map(_ =>
               ().asRight[AccountNameInUse]
             )
@@ -85,6 +85,7 @@ object AccountSql {
       }
   }
   private object queries {
+
     def listAllSql(userId: UserId): Query0[Account] =
       sql"""
            select * from account

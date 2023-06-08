@@ -1,7 +1,9 @@
 package domain
 
+import cats.Show
 import derevo.circe.{decoder, encoder}
 import derevo.derive
+import doobie.Read
 import eu.timepit.refined.types.string.NonEmptyString
 import eu.timepit.refined.auto._
 import io.estatico.newtype.macros.newtype
@@ -15,15 +17,33 @@ object auth {
 
   @derive(loggable, encoder, decoder)
   @newtype case class UserId(value: Long)
+  object UserId {
+    implicit val doobieRead: Read[UserId] =
+      Read[Long].map(UserId(_))
+
+    implicit val showId: Show[UserId] =
+      Show.show(id => id.value.toString)
+  }
 
   @derive(loggable, encoder, decoder)
   @newtype case class UserName(value: String)
+  object UserName {
+    implicit val doobieRead: Read[UserName] =
+      Read[String].map(UserName(_))
+
+    implicit val showId: Show[UserName] =
+      Show.show(name => name.value)
+  }
 
   @derive(loggable, encoder, decoder)
   @newtype case class Password(value: String)
+  object Password {
+    implicit val doobieRead: Read[Password] =
+      Read[String].map(Password(_))
+  }
 
-  @derive(loggable, encoder, decoder)
-  @newtype case class JwtToken(value: String)
+//  @derive(loggable, encoder, decoder)
+//  @newtype case class JwtToken(value: String)
 
   @derive(loggable, encoder, decoder)
   @newtype case class EncryptedPassword(value: String)
@@ -32,33 +52,10 @@ object auth {
 
   @newtype case class DecryptCipher(value: Cipher)
 
-  @derive(decoder, encoder)
-  @newtype
-  case class UserNameParam(value: NonEmptyString) {
-    def toDomain: UserName = UserName(value.toLowerCase())
-  }
-
   @derive(encoder, decoder, show)
   case class User(uuid: UserId, name: UserName)
 
   case class UserWithPassword(uuid: UserId, name: UserName, password: Password)
-
-  @derive(decoder, encoder)
-  @newtype
-  case class PasswordParam(value: NonEmptyString) {
-    def toDomain: Password = Password(value)
-  }
-
-  @derive(decoder, encoder)
-  case class CreateUserParam(
-    userName: UserNameParam,
-    password: PasswordParam
-  ) {
-    def toDomain: CreateUser = CreateUser(
-      userName.toDomain,
-      password.toDomain
-    )
-  }
 
   case class CreateUser(
     name: UserName,
@@ -74,7 +71,7 @@ object auth {
 
   @derive(decoder, encoder)
   case class LoginUser(
-    username: UserNameParam,
-    password: PasswordParam
+    username: UserName,
+    password: Password
   )
 }

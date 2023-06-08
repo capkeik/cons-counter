@@ -14,6 +14,8 @@ object category {
   @newtype case class CategoryId(value: Long)
   object CategoryId {
     implicit val doobieRead: Read[CategoryId] = Read[Long].map(CategoryId(_))
+    implicit val schema: Schema[CategoryId] =
+      Schema.schemaForLong.map(l => Some(CategoryId(l)))(_.value)
   }
 
   @derive(decoder, encoder, eqv, show)

@@ -4,12 +4,17 @@ import doobie.Read
 import doobie.util.{Get, Put}
 import io.circe.{Decoder, Encoder, Json}
 import io.estatico.newtype.macros.newtype
+import sttp.tapir.Schema
 
 package object domain {
   @derive(decoder, encoder)
   @newtype case class Amount(value: BigDecimal)
   object Amount {
     implicit val doobieRead: Read[Amount] = Read[BigDecimal].map(Amount(_))
+    implicit val schema: Schema[Amount] =
+      Schema.schemaForBigDecimal.map(
+        bd => Some(Amount(bd))
+      )(_.value)
   }
 
   sealed trait TransactionDirection {

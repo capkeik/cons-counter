@@ -29,6 +29,9 @@ lazy val root = (project in file("."))
       "tf.tofu" %% "tofu-doobie-logging-ce3" % "0.12.0.1",
       "tf.tofu" %% "derevo-circe" % "0.13.0",
       "com.github.jwt-scala" %% "jwt-core" % "9.3.0",
+      "com.softwaremill.sttp.tapir" %% "tapir-core" % "1.4.0",
+      "com.softwaremill.sttp.tapir" %% "tapir-http4s-server" % "1.4.0",
+      "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % "1.4.0"
     ),
     dependencyOverrides += "io.circe" %% "circe-core" % "0.14.5"
   )

@@ -21,7 +21,7 @@ object UserSql {
 
   def make = new Impl
 
-  private final class Impl extends UserSql {
+  final class Impl extends UserSql {
     import queries._
     override def findAll(): ConnectionIO[List[User]] =
       findAllSql.to[List]

@@ -45,17 +45,17 @@ object CategorySql {
             delete from category where id = ${categoryId.value}
          """.update
 
-    def findByIdSql(userId: UserId, categoryId: CategoryId): Query0[Option[Category]] =
+    def findByIdSql(userId: UserId, categoryId: CategoryId): Query0[Category] =
       sql"""
            select * from account
            where user_id = ${userId.value} and id = ${categoryId.value}
-         """.query[Option[Category]]
+         """.query[Category]
 
-    def findByNameSql(userId: UserId, categoryName: CategoryName): Query0[Option[Category]] =
+    def findByNameSql(userId: UserId, categoryName: CategoryName): Query0[Category] =
       sql"""
            select * from account
            where user_id = ${userId.value} and name = ${categoryName.value}
-         """.query[Option[Category]]
+         """.query[Category]
 
   }
 
@@ -76,7 +76,7 @@ object CategorySql {
       userId: UserId,
       createCategory: CreateCategory
     ): doobie.ConnectionIO[Unit] =
-      createCatSql(userId, createCategory).run.map(id => ())
+      createCatSql(userId, createCategory).run.map(_ => ())
 
     override def removeCat(userId: UserId, categoryId: CategoryId): ConnectionIO[Either[CategoryNotFound, Unit]] =
       removeCatSql(userId, categoryId).run.map {

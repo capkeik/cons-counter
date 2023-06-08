@@ -28,7 +28,7 @@ object TransactionsSql {
 
   def make = new Impl
 
-  private final class Impl extends TransactionsSql {
+  final class Impl extends TransactionsSql {
 
     import queries._
 
